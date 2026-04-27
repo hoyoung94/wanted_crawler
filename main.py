@@ -3,8 +3,8 @@ from recommender import main as recommend
 
 
 def main():
-    crawl()
-    recommend()
+    new_jobs = crawl()
+    recommend(new_jobs)
 
 
 if __name__ == "__main__":
