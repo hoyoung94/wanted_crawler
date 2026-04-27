@@ -59,14 +59,18 @@ def save_recommended_csv(df: pd.DataFrame) -> Path:
     return filepath
 
 
+def _safe(text: str) -> str:
+    return str(text).encode("cp949", errors="replace").decode("cp949")
+
+
 def print_results(ranked: list[dict]):
     top = ranked[:config.TOP_N]
     print(f"\n[추천 결과] 신규 공고 상위 {config.TOP_N}개 ({len(ranked)}건 분석)")
     print("=" * 62)
     for rank, job in enumerate(top, 1):
-        print(f"  {rank:2d}위  점수: {job['score']:5.1f}  {job['company']}")
-        print(f"       직무: {job['title']}")
-        print(f"       이유: {job['reason']}")
+        print(f"  {rank:2d}위  점수: {job['score']:5.1f}  {_safe(job['company'])}")
+        print(f"       직무: {_safe(job['title'])}")
+        print(f"       이유: {_safe(job['reason'])}")
         print(f"       URL : {job['url']}")
         print()
     print("=" * 62)
