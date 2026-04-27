@@ -107,7 +107,7 @@ def filter_entry_allowed(records: list[dict]) -> list[dict]:
     result = []
     for r in records:
         val = r.get("experience_from")
-        if val == "" or val == 0 or val is None or (isinstance(val, float) and val == 0.0):
+        if val == "" or val is None or (isinstance(val, (int, float)) and val <= config.MAX_EXPERIENCE_FROM):
             result.append(r)
     return result
 
