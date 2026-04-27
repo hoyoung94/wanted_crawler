@@ -103,6 +103,15 @@ def parse_job(raw: dict) -> dict:
     }
 
 
+def filter_entry_allowed(records: list[dict]) -> list[dict]:
+    result = []
+    for r in records:
+        val = r.get("experience_from")
+        if val == "" or val == 0 or val is None or (isinstance(val, float) and val == 0.0):
+            result.append(r)
+    return result
+
+
 def find_new_jobs(records: list[dict]) -> list[dict]:
     if not MASTER_CSV.exists():
         return records
@@ -153,7 +162,10 @@ def main() -> list[dict]:
         if i % 50 == 0:
             print(f"    ... {i}/{len(raw_jobs)}건 처리 중")
 
-    new_jobs = find_new_jobs(records)
+    filtered = filter_entry_allowed(records)
+    print(f"[*] 신입 가능 공고: {len(filtered)}건 ({len(records)}건 중)")
+
+    new_jobs = find_new_jobs(filtered)
     print(f"[*] 신규 공고: {len(new_jobs)}건 (master 대비)")
 
     if new_jobs:
@@ -164,7 +176,7 @@ def main() -> list[dict]:
         filepath = save_new_csv(new_jobs)
         print(f"[+] 저장 완료 → {filepath}")
     else:
-        print("[*] 신규 공고 없음 — 저장 생략")
+        print("[*] 신규 공고 없음 (신입 가능 + 미수집 기준) — 저장 생략")
 
     return new_jobs
 
