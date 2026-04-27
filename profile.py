@@ -15,7 +15,7 @@ SKILLS = [
 
 EXPERIENCE_YEARS = 0
 
-PREFERRED_LOCATIONS = ["서울", "인천", "경기", "판교", "재택"]
+PREFERRED_LOCATIONS = []
 
 PREFERRED_CATEGORIES = [
     "클라우드", "인프라", "MSP", "보안", "운영", "기술지원", "DevOps", "SRE"
