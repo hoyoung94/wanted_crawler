@@ -34,8 +34,18 @@ def score_jobs(jobs: list[dict]) -> list[dict]:
     result = []
     for job, sim in zip(jobs, sims):
         score = round(float(sim) * 100, 1)
-        matched = [s for s in user_profile.SKILLS if s.lower() in build_job_text(job).lower()]
-        reason = f"기술 일치: {', '.join(matched)}" if matched else "텍스트 유사도 기반"
+        job_text = build_job_text(job).lower()
+
+        matched_skills = [s for s in user_profile.SKILLS if s.lower() in job_text]
+        matched_certs  = [c for c in user_profile.CERTIFICATIONS if c.lower() in job_text]
+
+        parts = []
+        if matched_skills:
+            parts.append(f"기술 일치: {', '.join(matched_skills)}")
+        if matched_certs:
+            parts.append(f"자격증 우대: {', '.join(dict.fromkeys(matched_certs))}")
+        reason = " / ".join(parts) if parts else "텍스트 유사도 기반"
+
         result.append({**job, "score": score, "reason": reason})
 
     return sorted(result, key=lambda x: x["score"], reverse=True)
